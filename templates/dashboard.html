@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.title}}</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="header__title">
+                <span class="header__icon">📊</span>
+                Система мониторинга сервисов
+            </h1>
+            <div class="header__status">
+                <span class="status-indicator" id="connectionStatus">Подключение...</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="stats">
+                <div class="stats__grid">
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--total">📈</div>
+                        <div class="stat-card__content">
+                            <h3 class="stat-card__title">Всего сервисов</h3>
+                            <p class="stat-card__value" id="totalServices">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--healthy">✅</div>
+                        <div class="stat-card__content">
+                            <h3 class="stat-card__title">Работают</h3>
+                            <p class="stat-card__value" id="healthyServices">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--unhealthy">❌</div>
+                        <div class="stat-card__content">
+                            <h3 class="stat-card__title">Не работают</h3>
+                            <p class="stat-card__value" id="unhealthyServices">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--uptime">⏱️</div>
+                        <div class="stat-card__content">
+                            <h3 class="stat-card__title">Средний uptime</h3>
+                            <p class="stat-card__value" id="averageUptime">0%</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-card__icon stat-card__icon--alerts">🚨</div>
+                        <div class="stat-card__content">
+                            <h3 class="stat-card__title">Активные алерты</h3>
+                            <p class="stat-card__value" id="activeAlerts">0</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="services-section">
+                <div class="services-section__header">
+                    <h2 class="services-section__title">Сервисы</h2>
+                    <button class="btn btn--primary" id="addServiceBtn">
+                        <span class="btn__icon">➕</span>
+                        Добавить сервис
+                    </button>
+                </div>
+
+                <div class="services-grid" id="servicesGrid">
+                </div>
+            </section>
+
+            <section class="alerts-section">
+                <h2 class="alerts-section__title">Алерты</h2>
+                <div class="alerts-list" id="alertsList">
+                </div>
+            </section>
+
+            <section class="chart-section">
+                <h2 class="chart-section__title">График uptime за 24 часа</h2>
+                <div class="chart-container">
+                    <canvas id="uptimeChart"></canvas>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <div class="modal" id="addServiceModal">
+        <div class="modal__overlay"></div>
+        <div class="modal__content">
+            <div class="modal__header">
+                <h3 class="modal__title">Добавить новый сервис</h3>
+                <button class="modal__close" id="closeModal">&times;</button>
+            </div>
+            <form class="modal__form" id="addServiceForm">
+                <div class="form-group">
+                    <label for="serviceName" class="form-label">Название сервиса</label>
+                    <input type="text" id="serviceName" name="name" class="form-input" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="serviceUrl" class="form-label">URL сервиса</label>
+                    <input type="url" id="serviceUrl" name="url" class="form-input" 
+                           placeholder="https://example.com/health" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="checkInterval" class="form-label">Интервал проверки (сек)</label>
+                        <input type="number" id="checkInterval" name="check_interval" 
+                               class="form-input" value="30" min="10" max="300">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="timeout" class="form-label">Таймаут (сек)</label>
+                        <input type="number" id="timeout" name="timeout" 
+                               class="form-input" value="10" min="1" max="60">
+                    </div>
+                </div>
+                
+                <div class="modal__actions">
+                    <button type="button" class="btn btn--secondary" id="cancelAdd">Отмена</button>
+                    <button type="submit" class="btn btn--primary">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="serviceDetailsModal">
+        <div class="modal__overlay"></div>
+        <div class="modal__content modal__content--large">
+            <div class="modal__header">
+                <h3 class="modal__title">Детали сервиса</h3>
+                <button class="modal__close" id="closeDetailsModal">&times;</button>
+            </div>
+            <div class="modal__body" id="serviceDetailsContent">
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
